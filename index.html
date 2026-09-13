@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Misión Correo Seguro · Informática Aplicada 4° Año</title>
+<style>
+/* ============================================================
+   PALETA Y VARIABLES GLOBALES
+   ============================================================ */
+:root{
+  --azul-900:#0b2545;
+  --azul-800:#123a6b;
+  --azul-700:#1a4fa0;
+  --azul-600:#2563eb;
+  --azul-500:#3b82f6;
+  --azul-100:#dbeafe;
+  --azul-50:#eff6ff;
+
+  --gris-900:#0f172a;
+  --gris-700:#334155;
+  --gris-500:#64748b;
+  --gris-300:#cbd5e1;
+  --gris-200:#e2e8f0;
+  --gris-100:#f1f5f9;
+
+  --verde:#15803d;
+  --verde-bg:#dcfce7;
+  --verde-bd:#bbf7d0;
+
+  --rojo:#b91c1c;
+  --rojo-bg:#fee2e2;
+  --rojo-bd:#fecaca;
+
+  --ambar:#b45309;
+  --ambar-bg:#fef3c7;
+  --ambar-bd:#fde68a;
+
+  --radio:18px;
+  --sombra:0 10px 30px rgba(11,37,69,.10);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  background:radial-gradient(circle at 8% 0%, #e6f0ff 0%, #f7fafc 42%, #eef2f7 100%);
+  color:var(--gris-900);
+  min-height:100vh;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.shell{max-width:1080px;margin:0 auto;padding:18px 16px 56px;}
+
+/* ============================================================
+   BARRA SUPERIOR
+   ============================================================ */
+.topbar{
+  display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,var(--azul-900) 0%, var(--azul-700) 60%, var(--azul-600) 100%);
+  color:#fff;border-radius:22px;padding:18px 22px;box-shadow:var(--sombra);
+}
+.brand{display:flex;gap:14px;align-items:center;min-width:0}
+.brand-icon{
+  width:48px;height:48px;flex:0 0 48px;border-radius:14px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+}
+.brand h1{margin:0;font-size:19px;letter-spacing:.2px}
+.brand p{margin:2px 0 0;font-size:12.5px;opacity:.82}
+
+.progress-wrap{min-width:210px;flex:1 1 210px;max-width:320px}
+.progress-label{font-size:12px;opacity:.9;margin-bottom:6px;font-weight:600;letter-spacing:.3px}
+.progress-bar{height:9px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden}
+.progress-bar span{
+  display:block;height:100%;width:0%;border-radius:99px;
+  background:linear-gradient(90deg,#7dd3fc,#a7f3d0);
+  transition:width .45s ease;
+}
+
+/* ============================================================
+   PANTALLAS Y TARJETAS
+   ============================================================ */
+.screen{display:none;margin-top:22px}
+.screen.active{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.card{
+  background:#fff;border-radius:var(--radio);padding:26px;
+  box-shadow:var(--sombra);border:1px solid #e8eef7;
+}
+.card + .card{margin-top:18px}
+
+h2{margin:8px 0 6px;font-size:22px;color:var(--azul-800);letter-spacing:.2px}
+h3{margin:18px 0 8px;font-size:16px;color:var(--azul-800)}
+p{margin:8px 0}
+.muted{color:var(--gris-500);font-size:14px}
+
+.tag{
+  display:inline-block;background:var(--azul-100);color:var(--azul-800);
+  font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 12px;border-radius:99px;
+}
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+.btn{
+  border:none;border-radius:13px;padding:13px 22px;font-size:15px;font-weight:700;
+  cursor:pointer;font-family:inherit;transition:.18s ease;letter-spacing:.2px;
+}
+.btn-primary{background:var(--azul-600);color:#fff;box-shadow:0 6px 16px rgba(37,99,235,.28)}
+.btn-primary:hover:not(:disabled){background:var(--azul-700);transform:translateY(-2px)}
+.btn-primary:disabled{background:var(--gris-300);color:#fff;cursor:not-allowed;box-shadow:none;transform:none}
+.btn-ghost{background:var(--azul-50);color:var(--azul-700);border:1px solid var(--azul-100)}
+.btn-ghost:hover{background:var(--azul-100)}
+.btn-success{background:var(--verde);color:#fff}
+.btn-success:hover{background:#166534;transform:translateY(-2px)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+.login-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:start}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13.5px;font-weight:700;color:var(--gris-700);margin-bottom:7px}
+.field input, .field textarea{
+  width:100%;border:1.5px solid var(--gris-200);border-radius:12px;padding:12px 14px;
+  font-size:15px;font-family:inherit;color:var(--gris-900);background:#fff;transition:.15s;
+}
+.field input:focus, .field textarea:focus{
+  outline:none;border-color:var(--azul-500);box-shadow:0 0 0 4px rgba(59,130,246,.14);
+}
+.field input::placeholder, .field textarea::placeholder{color:#9aa8bd}
+
+.info-list{list-style:none;padding:0;margin:14px 0 0}
+.info-list li{
+  display:flex;gap:12px;align-items:flex-start;background:var(--azul-50);
+  border:1px solid var(--azul-100);border-radius:14px;padding:12px 14px;margin-bottom:10px;font-size:14px;
+}
+.info-list .num{
+  flex:0 0 26px;height:26px;border-radius:50%;background:var(--azul-600);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;
+}
+
+/* ============================================================
+   ESTACIÓN 1
+   ============================================================ */
+.slots{display:grid;gap:10px;margin:18px 0 6px}
+.slot{
+  display:flex;gap:14px;align-items:center;border:2px dashed var(--gris-200);
+  border-radius:14px;padding:12px 16px;background:var(--gris-100);min-height:70px;
+  transition:.15s;
+}
+.slot.filled{
+  border-style:solid;border-color:var(--azul-500);background:var(--azul-50);cursor:pointer;
+}
+.slot.filled:hover{border-color:var(--rojo);background:var(--rojo-bg)}
+.slot-num{
+  flex:0 0 30px;height:30px;border-radius:9px;background:var(--azul-600);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;
+}
+.slot-text{font-size:14px}
+.slot-text strong{display:block;color:var(--azul-800);font-size:14.5px;margin-bottom:1px}
+.slot-text span{color:var(--gris-700)}
+
+.pool{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:16px}
+.paso{
+  border:1.5px solid var(--azul-100);background:#fff;border-radius:14px;padding:13px 15px;
+  cursor:pointer;text-align:left;font-family:inherit;font-size:13.5px;color:var(--gris-700);
+  transition:.16s;line-height:1.45;
+}
+.paso:hover{border-color:var(--azul-500);box-shadow:0 8px 18px rgba(37,99,235,.16);transform:translateY(-2px)}
+.paso strong{display:block;color:var(--azul-700);font-size:14.5px;margin-bottom:3px}
+
+/* ============================================================
+   MENSAJES DE FEEDBACK
+   ============================================================ */
+.msg{
+  display:flex;gap:10px;padding:11px 15px;border-radius:12px;font-size:13.8px;
+  margin-bottom:9px;border:1px solid transparent;line-height:1.45;
+}
+.msg:last-child{margin-bottom:0}
+.msg.ok{background:var(--verde-bg);color:#14532d;border-color:var(--verde-bd)}
+.msg.warn{background:var(--ambar-bg);color:#78350f;border-color:var(--ambar-bd)}
+.msg.err{background:var(--rojo-bg);color:#7f1d1d;border-color:var(--rojo-bd)}
+.msg .ico{flex:0 0 auto;font-weight:800}
+
+/* ============================================================
+   ESTACIÓN 2 · COMPOSITOR
+   ============================================================ */
+.composer-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:22px;align-items:start}
+.scenario{
+  background:linear-gradient(135deg,#eff6ff,#e0edff);border:1px solid var(--azul-100);
+  border-radius:14px;padding:16px 18px;font-size:14px;margin-bottom:18px;
+}
+.scenario strong{color:var(--azul-800)}
+.chip{
+  display:inline-block;background:#fff;border:1px solid var(--azul-100);border-radius:8px;
+  padding:2px 8px;font-family:'Consolas',monospace;font-size:12.6px;color:var(--azul-700);
+  margin:2px 2px 2px 0;
+}
+.composer{
+  border:1px solid var(--gris-200);border-radius:16px;overflow:hidden;background:#fff;
+}
+.composer-head{
+  background:var(--gris-100);padding:10px 16px;font-weight:700;font-size:13.5px;
+  color:var(--gris-700);border-bottom:1px solid var(--gris-200);
+}
+.composer-row{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--gris-200)}
+.composer-row label{flex:0 0 62px;font-size:13px;font-weight:700;color:var(--gris-500)}
+.composer-row input{
+  flex:1;border:none;padding:6px 4px;font-size:14.5px;font-family:inherit;color:var(--gris-900);background:transparent;
+}
+.composer-row input:focus{outline:none}
+.composer-body{padding:14px 16px}
+.composer-body textarea{
+  width:100%;min-height:170px;border:none;resize:vertical;font-family:inherit;
+  font-size:14.5px;line-height:1.6;color:var(--gris-900);background:transparent;
+}
+.composer-body textarea:focus{outline:none}
+
+.checklist{display:grid;gap:8px;margin:0 0 16px}
+.chk{
+  display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;
+  color:var(--gris-700);background:var(--gris-100);border-radius:11px;padding:9px 13px;
+  border:1px solid var(--gris-200);transition:.2s;
+}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--gris-300);flex:0 0 11px;transition:.2s}
+.chk.ok{background:var(--verde-bg);border-color:var(--verde-bd);color:#14532d}
+.chk.ok .dot{background:var(--verde)}
+.chk.warn{background:var(--ambar-bg);border-color:var(--ambar-bd);color:#78350f}
+.chk.warn .dot{background:var(--ambar)}
+.chk.err{background:var(--rojo-bg);border-color:var(--rojo-bd);color:#7f1d1d}
+.chk.err .dot{background:var(--rojo)}
+
+/* ============================================================
+   ESTACIÓN 3 · BANDEJA
+   ============================================================ */
+.correo{
+  border:1px solid var(--gris-200);border-radius:16px;padding:16px 18px;margin-bottom:14px;
+  background:#fff;transition:.2s;
+}
+.correo.resuelto{border-color:var(--azul-100);background:#fbfdff}
+.correo-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.avatar{
+  flex:0 0 40px;height:40px;border-radius:12px;background:var(--azul-100);color:var(--azul-700);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;
+}
+.correo-de{font-size:13.5px;font-weight:700;color:var(--gris-900);word-break:break-word}
+.correo-asunto{font-size:14.5px;font-weight:700;color:var(--azul-800);margin-top:2px}
+.correo-cuerpo{
+  font-size:13.6px;color:var(--gris-700);background:var(--gris-100);
+  border-radius:11px;padding:11px 14px;margin:0 0 12px;word-break:break-word;
+}
+.correo-opciones{display:flex;flex-wrap:wrap;gap:10px}
+.opcion{
+  flex:1 1 190px;border:1.5px solid var(--gris-200);background:#fff;border-radius:12px;
+  padding:11px 14px;font-size:13.6px;font-weight:700;font-family:inherit;color:var(--gris-700);
+  cursor:pointer;transition:.16s;
+}
+.opcion:hover{border-color:var(--azul-500);background:var(--azul-50)}
+.opcion.sel-inbox{background:var(--azul-600);border-color:var(--azul-600);color:#fff}
+.opcion.sel-spam{background:#b45309;border-color:#b45309;color:#fff}
+.correo-feedback{margin-top:12px}
+.correo-feedback:empty{display:none}
+
+/* ============================================================
+   RESULTADOS
+   ============================================================ */
+.score-hero{
+  display:flex;flex-wrap:wrap;gap:26px;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,var(--azul-900),var(--azul-700));color:#fff;
+  border-radius:20px;padding:26px 28px;
+}
+.score-circle{
+  width:132px;height:132px;flex:0 0 132px;border-radius:50%;
+  background:rgba(255,255,255,.1);border:6px solid rgba(255,255,255,.28);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.score-circle .n{font-size:38px;font-weight:800;line-height:1}
+.score-circle .d{font-size:12px;opacity:.85;margin-top:4px}
+.score-hero h2{color:#fff;margin:0 0 6px}
+.score-hero p{margin:0;opacity:.9;font-size:14.5px}
+.badge{
+  display:inline-block;margin-top:12px;padding:7px 16px;border-radius:99px;
+  font-size:13px;font-weight:800;letter-spacing:.3px;
+}
+.badge.aprobado{background:#bbf7d0;color:#14532d}
+.badge.observado{background:#fde68a;color:#78350f}
+.badge.refuerzo{background:#fecaca;color:#7f1d1d}
+
+table.tabla{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px}
+table.tabla th, table.tabla td{border:1px solid var(--gris-200);padding:10px 12px;text-align:left}
+table.tabla th{background:var(--azul-50);color:var(--azul-800);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+table.tabla td.num{text-align:center;font-weight:700;white-space:nowrap}
+
+/* ============================================================
+   PIE
+   ============================================================ */
+.foot{
+  text-align:center;font-size:12.5px;color:var(--gris-500);margin-top:30px;line-height:1.7;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:880px){
+  .composer-grid{grid-template-columns:1fr}
+  .login-grid{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .shell{padding:12px 12px 40px}
+  .card{padding:20px 17px}
+  .topbar{border-radius:18px;padding:16px}
+  .brand h1{font-size:16.5px}
+  .brand p{font-size:11.5px}
+  .progress-wrap{max-width:none}
+  h2{font-size:19px}
+  .btn{width:100%;text-align:center}
+  .actions{flex-direction:column}
+  .score-hero{padding:20px;justify-content:center;text-align:center}
+  .score-circle{width:112px;height:112px;flex:0 0 112px}
+  .score-circle .n{font-size:32px}
+  table.tabla{font-size:12.5px}
+  table.tabla th, table.tabla td{padding:7px 8px}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ==================== BARRA SUPERIOR ==================== -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">✉️</div>
+      <div>
+        <h1>Misión Correo Seguro</h1>
+        <p>Informática Aplicada · 4° Año · Material N°16</p>
+      </div>
+    </div>
+    <div class="progress-wrap" id="progressWrap" hidden>
+      <div class="progress-label" id="progressLabel">Estación 1 de 3</div>
+      <div class="progress-bar"><span id="progressFill"></span></div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ==================== PANTALLA: LOGIN ==================== -->
+    <section id="screen-login" class="screen active">
+      <div class="card">
+        <div class="login-grid">
+          <div>
+            <span class="tag">Inicio de la misión</span>
+            <h2>Identificación del alumno</h2>
+            <p class="muted">
+              Completá tus datos para comenzar. Se usarán para generar el informe final
+              que vas a descargar y subir a Google Classroom.
+            </p>
+            <form id="formLogin" autocomplete="off">
+              <div class="field">
+                <label for="inpNombre">Nombre</label>
+                <input id="inpNombre" type="text" placeholder="Ej.: Ana" required maxlength="40" />
+              </div>
+              <div class="field">
+                <label for="inpApellido">Apellido</label>
+                <input id="inpApellido" type="text" placeholder="Ej.: Gómez" required maxlength="40" />
+              </div>
+              <div class="field">
+                <label for="inpCurso">Curso / División</label>
+                <input id="inpCurso" type="text" placeholder="Ej.: 4° A" required maxlength="20" />
+              </div>
+              <button class="btn btn-primary" type="submit">Comenzar misión →</button>
+            </form>
+          </div>
+
+          <div>
+            <h3 style="margin-top:0">🗺️ Las 3 estaciones</h3>
+            <ul class="info-list">
+              <li><span class="num">1</span><div><strong>Arquitectura y enrutamiento.</strong><br>
+                Ordená los 4 pasos del viaje de un correo electrónico.</div></li>
+              <li><span class="num">2</span><div><strong>Redacción estratégica.</strong><br>
+                Completá un correo institucional usando bien Para, CC, CCO, Asunto y Cuerpo.</div></li>
+              <li><span class="num">3</span><div><strong>Auditoría y ciberseguridad.</strong><br>
+                Detectá correos legítimos y trampas de phishing en tu bandeja.</div></li>
+            </ul>
+            <p class="muted" style="margin-top:14px">
+              Puntaje total: <strong>100 puntos</strong>. Al finalizar podrás descargar tu comprobante en formato .doc.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PANTALLA: ESTACIÓN 1 ==================== -->
+    <section id="screen-1" class="screen">
+      <div class="card">
+        <span class="tag">Estación 1 · 20 puntos</span>
+        <h2>Arquitectura y enrutamiento</h2>
+        <p>
+          ¿Cómo viaja un e-mail? Ordená los <strong>4 pasos</strong> haciendo clic sobre las tarjetas
+          en el orden correcto (del 1 al 4). Si te equivocás, podés tocar una tarjeta ubicada
+          para devolverla a la zona de opciones.
+        </p>
+
+        <div class="slots" id="slots1"></div>
+        <div class="pool" id="pool1"></div>
+
+        <div id="fb1" style="margin-top:18px"></div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="reset1" type="button">↺ Reiniciar orden</button>
+          <button class="btn btn-primary" id="check1" type="button" disabled>Verificar orden</button>
+          <button class="btn btn-ghost" id="btnReintentar1" type="button" style="display:none">🔄 Reintentar</button>
+          <button class="btn btn-success" id="btnContinuar1" type="button" style="display:none">Continuar a la Estación 2 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PANTALLA: ESTACIÓN 2 ==================== -->
+    <section id="screen-2" class="screen">
+      <div class="card">
+        <span class="tag">Estación 2 · 40 puntos</span>
+        <h2>Redacción estratégica y cabeceras</h2>
+
+        <div class="scenario">
+          <strong>📋 Consigna:</strong> Sos el/la <strong>delegado/a de 4° Año</strong>. Debés enviar un correo
+          a la profesora de Informática para consultar por la <strong>Actividad N°9</strong>.
+          La preceptora debe quedar informada, pero <em>no necesita responder</em>.
+          Además, querés que tu compañero <strong>delegado suplente</strong> reciba una copia
+          <em>sin que el resto de los destinatarios lo sepa</em> (para proteger su identidad).
+          <div style="margin-top:10px">
+            <span class="chip">profesorainformatica@escuela.edu.ar</span>
+            <span class="chip">preceptoria@escuela.edu.ar</span>
+            <span class="chip">delegado.suplente@escuela.edu.ar</span>
+          </div>
+        </div>
+
+        <div class="composer-grid">
+          <!-- Columna izquierda: el compositor -->
+          <div>
+            <div class="composer">
+              <div class="composer-head">✉️ Nuevo Mensaje</div>
+
+              <div class="composer-row">
+                <label for="f-para">Para</label>
+                <input id="f-para" type="text" placeholder="destinatario@ejemplo.com" />
+              </div>
+              <div class="composer-row">
+                <label for="f-cc">CC</label>
+                <input id="f-cc" type="text" placeholder="copia visible (opcional)" />
+              </div>
+              <div class="composer-row">
+                <label for="f-cco">CCO</label>
+                <input id="f-cco" type="text" placeholder="copia oculta (opcional)" />
+              </div>
+              <div class="composer-row">
+                <label for="f-asunto">Asunto</label>
+                <input id="f-asunto" type="text" placeholder="Breve descripción del contenido" />
+              </div>
+
+              <div class="composer-body">
+                <textarea id="f-cuerpo" placeholder="Escribí aquí el cuerpo del mensaje..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna derecha: checklist y feedback en vivo -->
+          <div>
+            <h3 style="margin-top:0">✅ Verificación en tiempo real</h3>
+            <div class="checklist" id="checklist2">
+              <div class="chk" data-k="para"><span class="dot"></span> Destinatario (Para)</div>
+              <div class="chk" data-k="cc"><span class="dot"></span> Copia visible (CC)</div>
+              <div class="chk" data-k="cco"><span class="dot"></span> Copia oculta (CCO)</div>
+              <div class="chk" data-k="asunto"><span class="dot"></span> Asunto descriptivo</div>
+              <div class="chk" data-k="cuerpo"><span class="dot"></span> Cuerpo estructurado</div>
+            </div>
+            <div id="fb2"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="check2" type="button">📤 Enviar y verificar correo</button>
+          <button class="btn btn-success" id="btnContinuar2" type="button" style="display:none">Continuar a la Estación 3 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PANTALLA: ESTACIÓN 3 ==================== -->
+    <section id="screen-3" class="screen">
+      <div class="card">
+        <span class="tag">Estación 3 · 40 puntos</span>
+        <h2>Auditoría de bandeja y ciberseguridad</h2>
+        <p>
+          Revisá cada mensaje y clasificalo correctamente. Analizá con atención el
+          <strong>remitente</strong>, el <strong>asunto</strong>, el <strong>tono</strong> y los
+          <strong>enlaces o pedidos de datos</strong>. ¡Ojo: hay trampas de phishing!
+        </p>
+
+        <div id="listaCorreos" style="margin-top:18px"></div>
+
+        <div id="fb3"></div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="check3" type="button" disabled>🔍 Verificar auditoría</button>
+          <button class="btn btn-success" id="btnContinuar3" type="button" style="display:none">Ver mis resultados →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PANTALLA: RESULTADOS ==================== -->
+    <section id="screen-results" class="screen">
+      <div class="card">
+        <div class="score-hero">
+          <div>
+            <h2 id="resTitulo">¡Misión completada!</h2>
+            <p id="resSubtitulo">Revisá el detalle de tu desempeño en las tres estaciones.</p>
+            <span class="badge" id="resBadge">—</span>
+          </div>
+          <div class="score-circle">
+            <span class="n" id="resPuntaje">0</span>
+            <span class="d">de 100 puntos</span>
+          </div>
+        </div>
+
+        <h3>📊 Detalle por estación</h3>
+        <table class="tabla" id="tablaResultados">
+          <thead>
+            <tr><th>Estación</th><th>Contenido evaluado</th><th style="text-align:center">Puntaje</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <h3>📝 Observaciones</h3>
+        <div id="observaciones"></div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="btnDescargar" type="button">📥 Descargar Comprobante para Google Classroom (.doc)</button>
+          <button class="btn btn-ghost" id="btnReiniciar" type="button">↺ Volver a realizar la actividad</button>
+        </div>
+        <p class="muted" style="margin-top:14px">
+          El archivo se descargará con el nombre
+          <strong>Informe_MisionCorreoSeguro_Apellido_Nombre.doc</strong> y podrás subirlo
+          directamente a la tarea de Google Classroom.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    Material N°16 · <em>Dominando el Correo Electrónico</em> · Informática Aplicada 4° Año<br />
+    Actividad N°9 · Prof. Diego Rodríguez
+  </footer>
+</div>
+
+<script>
+/* ==========================================================================
+   0. ESTADO GLOBAL DE LA APLICACIÓN
+   ========================================================================== */
+const state = {
+  alumno: { nombre:'', apellido:'', curso:'' },
+  inicio: null,
+  fin: null,
+  e1: { best:0, intentos:0, detalle:[], completada:false },
+  e2: { puntaje:0, max:40, detalle:[], completada:false },
+  e3: { respuestas:{}, puntaje:0, aciertos:0, detalle:[], completada:false }
+};
+
+/* ==========================================================================
+   1. UTILIDADES GENERALES
+   ========================================================================== */
+const $  = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+
+/** Mezcla aleatoriamente los elementos de un array (Fisher–Yates). */
+function mezclar(arr){
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/** Convierte un string con varias direcciones en un array limpio y en minúsculas. */
+function normalizarEmails(valor){
+  return (valor || '')
+    .split(/[,;\s]+/)
+    .map(x => x.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+/** Escapa caracteres peligrosos antes de inyectar texto en el DOM. */
+function escaparHTML(str){
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+/** Muestra una sola pantalla y hace scroll al inicio. */
+function mostrarPantalla(id){
+  $$('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/** Actualiza la barra de progreso superior. */
+function setProgreso(n){
+  const wrap = $('#progressWrap');
+  if (n === 0){ wrap.hidden = true; return; }
+  wrap.hidden = false;
+  const etiquetas = { 1:'Estación 1 de 3 · Arquitectura', 2:'Estación 2 de 3 · Redacción', 3:'Estación 3 de 3 · Auditoría', 4:'Resultados finales' };
+  $('#progressLabel').textContent = etiquetas[n] || '';
+  const pct = n === 4 ? 100 : Math.round(((n - 1) / 3) * 100) + 8;
+  $('#progressFill').style.width = Math.min(pct, 100) + '%';
+}
+
+/** Crea el HTML de un mensaje de feedback. */
+function bloqueMsg(tipo, texto){
+  const ico = tipo === 'ok' ? '✔' : tipo === 'warn' ? '⚠' : '✖';
+  return `<div class="msg ${tipo}"><span class="ico">${ico}</span><span>${texto}</span></div>`;
+}
+
+/* ==========================================================================
+   2. PANTALLA DE LOGIN
+   ========================================================================== */
+$('#formLogin').addEventListener('submit', function(ev){
+  ev.preventDefault();
+
+  const nombre   = $('#inpNombre').value.trim();
+  const apellido = $('#inpApellido').value.trim();
+  const curso    = $('#inpCurso').value.trim();
+
+  if (!nombre || !apellido || !curso){
+    alert('Por favor, completá Nombre, Apellido y Curso antes de comenzar.');
+    return;
+  }
+
+  state.alumno = { nombre, apellido, curso };
+  state.inicio = new Date();
+
+  setProgreso(1);
+  iniciarEstacion1();
+  mostrarPantalla('screen-1');
+});
+
+/* ==========================================================================
+   3. ESTACIÓN 1 · ARQUITECTURA Y ENRUTAMIENTO
+   ========================================================================== */
+const PASOS_CORRECTOS = [
+  { id:'emision',   titulo:'1. Emisión',
+    texto:'El Usuario A escribe el mensaje (la "carta") e incluye fotografías o archivos (audio/video) desde su dispositivo.' },
+  { id:'transito',  titulo:'2. Tránsito',
+    texto:'El mensaje se envía a través de la red (Internet), emulando el viaje del correo postal.' },
+  { id:'recepcion', titulo:'3. Recepción',
+    texto:'El servidor (el "buzón") del Usuario B recibe el correo.' },
+  { id:'descarga',  titulo:'4. Descarga y respuesta',
+    texto:'El Usuario B lee el texto y descarga los archivos adjuntos. Puede responder con nuevas impresiones o archivos.' }
+];
+
+let e1Pool = [];      // tarjetas disponibles en la zona inferior
+let e1Orden = [];     // tarjetas ya ubicadas en los casilleros
+let e1Intentos = 0;
+let e1Finalizado = false;
+
+/** Reinicia la Estación 1 por completo. */
+function iniciarEstacion1(){
+  e1Pool = mezclar(PASOS_CORRECTOS);
+  e1Orden = [];
+  e1Intentos = 0;
+  e1Finalizado = false;
+
+  $('#fb1').innerHTML = '';
+  $('#check1').style.display = '';
+  $('#check1').disabled = true;
+  $('#reset1').style.display = '';
+  $('#btnReintentar1').style.display = 'none';
+  $('#btnContinuar1').style.display = 'none';
+
+  renderEstacion1();
+}
+
+/** Dibuja los casilleros y las tarjetas disponibles. */
+function renderEstacion1(){
+  // --- Casilleros numerados 1 a 4 ---
+  const slots = $('#slots1');
+  slots.innerHTML = '';
+  for (let i = 0; i < 4; i++){
+    const item = e1Orden[i];
+    const div = document.createElement('div');
+    div.className = 'slot' + (item ? ' filled' : '');
+    div.innerHTML =
+      `<span class="slot-num">${i + 1}</span>` +
+      (item
+        ? `<span class="slot-text"><strong>${escaparHTML(item.titulo)}</strong><span>${escaparHTML(item.texto)}</span></span>`
+        : `<span class="slot-text muted">Tocá una tarjeta de abajo para ubicarla aquí…</span>`);
+
+    if (item && !e1Finalizado){
+      div.title = 'Clic para devolver esta tarjeta';
+      div.addEventListener('click', () => {
+        e1Orden.splice(i, 1);
+        e1Pool.push(item);
+        renderEstacion1();
+      });
+    }
+    slots.appendChild(div);
+  }
+
+  // --- Zona de tarjetas disponibles ---
+  const pool = $('#pool1');
+  pool.innerHTML = '';
+  e1Pool.forEach(p => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'paso';
+    b.innerHTML = `<strong>${escaparHTML(p.titulo.replace(/^\d+\.\s*/, ''))}</strong><span>${escaparHTML(p.texto)}</span>`;
+    b.disabled = e1Finalizado;
+    b.addEventListener('click', () => {
+      if (e1Finalizado || e1Orden.length >= 4) return;
+      e1Orden.push(p);
+      e1Pool = e1Pool.filter(x => x.id !== p.id);
+      renderEstacion1();
+    });
+    pool.appendChild(b);
+  });
+
+  $('#check1').disabled = (e1Orden.length !== 4) || e1Finalizado;
+}
+
+/** Botón "Reiniciar orden". */
+$('#reset1').addEventListener('click', () => {
+  if (e1Finalizado) return;
+  e1Pool = mezclar([...e1Pool, ...e1Orden]);
+  e1Orden = [];
+  $('#fb1').innerHTML = '';
+  renderEstacion1();
+});
+
+/** Verifica el orden elegido y calcula el puntaje. */
+$('#check1').addEventListener('click', () => {
+  e1Intentos++;
+  let aciertos = 0;
+  const detalle = [];
+
+  e1Orden.forEach((item, i) => {
+    const ok = item.id === PASOS_CORRECTOS[i].id;
+    if (ok) aciertos++;
+    detalle.push({
+      pos: i + 1,
+      dado: item.titulo.replace(/^\d+\.\s*/, ''),
+      correcto: PASOS_CORRECTOS[i].titulo.replace(/^\d+\.\s*/, ''),
+      ok
+    });
+  });
+
+  const puntaje = aciertos * 5;              // 4 pasos × 5 pts = 20 pts
+  if (puntaje > state.e1.best) state.e1.best = puntaje;
+  state.e1.detalle = detalle;
+
+  // --- Feedback ---
+  let html = '';
+  if (aciertos === 4){
+    html += bloqueMsg('ok', '<strong>¡Perfecto!</strong> Ordenaste correctamente las 4 etapas del viaje de un correo electrónico.');
+  } else {
+    html += bloqueMsg('warn', `<strong>Ubicaste bien ${aciertos} de 4 pasos</strong> (${puntaje} puntos). Revisá el detalle:`);
+  }
+  detalle.forEach(d => {
+    html += d.ok
+      ? bloqueMsg('ok', `Posición ${d.pos}: <strong>${escaparHTML(d.dado)}</strong> — correcto.`)
+      : bloqueMsg('err', `Posición ${d.pos}: pusiste <strong>${escaparHTML(d.dado)}</strong>, pero correspondía <strong>${escaparHTML(d.correcto)}</strong>.`);
+  });
+  html += bloqueMsg('warn', '💡 Recordá: el e-mail es <strong>asincrónico</strong>, no requiere que ambos usuarios estén conectados al mismo tiempo.');
+  $('#fb1').innerHTML = html;
+
+  e1Finalizado = true;
+  renderEstacion1();
+  $('#check1').style.display = 'none';
+  $('#reset1').style.display = 'none';
+
+  if (aciertos < 4 && e1Intentos < 2){
+    $('#btnReintentar1').style.display = '';
+  }
+  $('#btnContinuar1').style.display = '';
+});
+
+/** Reintentar (una segunda oportunidad). */
+$('#btnReintentar1').addEventListener('click', () => {
+  iniciarEstacion1();
+});
+
+/** Pasar a la Estación 2. */
+$('#btnContinuar1').addEventListener('click', () => {
+  state.e1.completada = true;
+  setProgreso(2);
+  iniciarEstacion2();
+  mostrarPantalla('screen-2');
+});
+
+/* ==========================================================================
+   4. ESTACIÓN 2 · REDACCIÓN ESTRATÉGICA Y CABECERAS
+   ========================================================================== */
+const DIRS = {
+  profesora: 'profesorainformatica@escuela.edu.ar',
+  preceptora: 'preceptoria@escuela.edu.ar',
+  delegado:  'delegado.suplente@escuela.edu.ar'
+};
+
+let e2Bloqueada = false;
+
+/** Prepara la Estación 2 (limpia campos y listeners). */
+function iniciarEstacion2(){
+  ['f-para','f-cc','f-cco','f-asunto','f-cuerpo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  e2Bloqueada = false;
+  ['f-para','f-cc','f-cco','f-asunto','f-cuerpo'].forEach(id => {
+    document.getElementById(id).disabled = false;
+  });
+  $('#check2').style.display = '';
+  $('#check2').disabled = false;
+  $('#btnContinuar2').style.display = 'none';
+  $('#fb2').innerHTML = '';
+  actualizarChecklist2();
+}
+
+/**
+ * Analiza en tiempo real los campos del compositor.
+ * Devuelve un objeto con el estado pedagógico de cada campo.
+ */
+function analizarEstacion2(){
+  const nombre   = state.alumno.nombre.trim().toLowerCase();
+  const apellido = state.alumno.apellido.trim().toLowerCase();
+
+  const para   = normalizarEmails($('#f-para').value);
+  const cc     = normalizarEmails($('#f-cc').value);
+  const cco    = normalizarEmails($('#f-cco').value);
+  const asunto = $('#f-asunto').value.trim();
+  const cuerpo = $('#f-cuerpo').value.trim();
+
+  const res = {};
+
+  /* ---------- CAMPO "PARA" ---------- */
+  const paraExtra = para.filter(x => x !== DIRS.profesora);
+  if (para.length === 0){
+    res.para = { estado:'err', msg:'Falta completar el campo <strong>Para</strong>: así el mensaje no llega a nadie.' };
+  } else if (para.includes(DIRS.delegado)){
+    res.para = { estado:'err', msg:'El delegado suplente <strong>no debe ir en "Para"</strong>: su dirección tiene que protegerse usando CCO.' };
+  } else if (paraExtra.length > 0 && paraExtra.includes(DIRS.preceptora) && !para.includes(DIRS.profesora)){
+    res.para = { estado:'warn', msg:'La preceptora debe ir en <strong>CC</strong> (copia visible), no como destinataria principal. El mensaje lo debe accionar la profesora.' };
+  } else if (paraExtra.length > 0){
+    res.para = { estado:'warn', msg:'Hay direcciones de más en <strong>Para</strong>. Ahí solo va quien debe <em>accionar</em> o responder el mensaje.' };
+  } else if (para.includes(DIRS.profesora)){
+    res.para = { estado:'ok', msg:'Correcto: la profesora de Informática es la destinataria principal.' };
+  } else {
+    res.para = { estado:'err', msg:'La dirección de la profesora no figura en <strong>Para</strong>.' };
+  }
+
+  /* ---------- CAMPO "CC" ---------- */
+  const ccExtra = cc.filter(x => x !== DIRS.preceptora);
+  if (cc.length === 0){
+    res.cc = { estado:'warn', msg:'La preceptora debe quedar <strong>informada</strong>: agregala en CC.' };
+  } else if (cc.includes(DIRS.delegado)){
+    res.cc = { estado:'err', msg:'¡Cuidado con la privacidad! El delegado suplente debe ir en <strong>CCO</strong>, no en CC: en CC su dirección es visible para todos.' };
+  } else if (cc.includes(DIRS.preceptora) && ccExtra.length === 0){
+    res.cc = { estado:'ok', msg:'Correcto: la preceptora queda informada y su dirección es visible para todos los destinatarios.' };
+  } else if (cc.includes(DIRS.preceptora)){
+    res.cc = { estado:'warn', msg:'En <strong>CC</strong> solo debería figurar la preceptora.' };
+  } else {
+    res.cc = { estado:'warn', msg:'En <strong>CC</strong> debería figurar la preceptora (necesita estar informada).' };
+  }
+
+  /* ---------- CAMPO "CCO" ---------- */
+  const ccoExtra = cco.filter(x => x !== DIRS.delegado);
+  if (cco.length === 0){
+    res.cco = { estado:'warn', msg:'Falta la <strong>copia oculta</strong>: el delegado suplente debe recibir el mensaje sin que el resto lo sepa.' };
+  } else if (cco.includes(DIRS.delegado) && ccoExtra.length === 0){
+    res.cco = { estado:'ok', msg:'¡Excelente! Usaste CCO para proteger la identidad del delegado suplente.' };
+  } else if (cco.includes(DIRS.delegado)){
+    res.cco = { estado:'warn', msg:'El <strong>CCO</strong> contiene direcciones de más. Revisá quién debe permanecer oculto.' };
+  } else if (cco.includes(DIRS.profesora) || cco.includes(DIRS.preceptora)){
+    res.cco = { estado:'err', msg:'La profesora y la preceptora no deben ir en <strong>CCO</strong>: ellas deben ver el mensaje abiertamente.' };
+  } else {
+    res.cco = { estado:'err', msg:'En <strong>CCO</strong> debería estar la dirección del delegado suplente.' };
+  }
+
+  /* ---------- ASUNTO ---------- */
+  const asuntoMin = asunto.toLowerCase();
+  const genericos = ['hola','consulta','asunto','correo','urgente','ayuda','test','prueba','email','mail'];
+  const mencionaTema = /(actividad|inform[aá]tica|consulta|n[°º]?\s*9|\b9\b)/i.test(asunto);
+
+  if (asunto.length === 0){
+    res.asunto = { estado:'err', msg:'El <strong>Asunto</strong> está vacío. Es el "abreboca": lo primero que lee el receptor.' };
+  } else if (genericos.includes(asuntoMin)){
+    res.asunto = { estado:'warn', msg:'El Asunto es demasiado genérico. Mal ejemplo: "Hola". Buen ejemplo: "Consulta sobre Actividad N°9 - Informática".' };
+  } else if (asunto.length < 12){
+    res.asunto = { estado:'warn', msg:'El Asunto es muy corto. Describí el tema con mayor precisión.' };
+  } else if (mencionaTema){
+    res.asunto = { estado:'ok', msg:'Muy bien: el Asunto anticipa el contenido del mensaje.' };
+  } else {
+    res.asunto = { estado:'warn', msg:'El Asunto no menciona el tema de la consulta (Actividad N°9 - Informática).' };
+  }
+
+  /* ---------- CUERPO ---------- */
+  const haySaludo = /^\s*(hola|estimad[oa]s?|buen d[ií]a|buenas\s+(tardes|noches)|querid[oa])/i.test(cuerpo);
+  const hayDespedida = /(saludos cordiales|saludos|atentamente|cordialmente|muchas gracias|gracias|nos vemos|quedo atent[oa])/i.test(cuerpo);
+  const hayFirma = (nombre.length >= 3 && cuerpo.toLowerCase().includes(nombre)) ||
+                   (apellido.length >= 3 && cuerpo.toLowerCase().includes(apellido));
+
+  const faltantes = [];
+  if (!haySaludo) faltantes.push('un saludo inicial');
+  if (cuerpo.length < 60) faltantes.push('un desarrollo más completo');
+  if (!hayDespedida) faltantes.push('una despedida');
+  if (!hayFirma) faltantes.push('tu firma (nombre y apellido)');
+
+  if (faltantes.length === 0){
+    res.cuerpo = { estado:'ok', msg:'Cuerpo bien estructurado: saludo, desarrollo, despedida y firma.', haySaludo, hayDespedida, hayFirma };
+  } else {
+    res.cuerpo = {
+      estado: faltantes.length >= 3 ? 'err' : 'warn',
+      msg: 'Al cuerpo le falta: <strong>' + faltantes.join(', ') + '</strong>.',
+      haySaludo, hayDespedida, hayFirma
+    };
+  }
+
+  return res;
+}
+
+/** Refresca el checklist lateral y los avisos en vivo. */
+function actualizarChecklist2(){
+  if (e2Bloqueada) return;
+  const a = analizarEstacion2();
+
+  // Checklist
+  ['para','cc','cco','asunto','cuerpo'].forEach(k => {
+    const el = $(`.chk[data-k="${k}"]`);
+    if (!el) return;
+    el.classList.remove('ok','warn','err');
+    el.classList.add(a[k].estado);
+  });
+
+  // Feedback en vivo (máximo 4 mensajes relevantes)
+  const orden = ['para','cco','cc','asunto','cuerpo'];
+  let html = '';
+  orden.forEach(k => {
+    if (a[k].estado !== 'ok' && html.split('msg ').length <= 5){
+      html += bloqueMsg(a[k].estado, a[k].msg);
+    }
+  });
+  if (!html) html = bloqueMsg('ok', '¡Todo en orden! Tu correo está listo para enviarse.');
+
+  $('#fb2').innerHTML = html;
+}
+
+// Listeners de escritura en vivo
+['f-para','f-cc','f-cco','f-asunto','f-cuerpo'].forEach(id => {
+  document.getElementById(id).addEventListener('input', actualizarChecklist2);
+});
+
+/** Verificación final de la Estación 2 y cálculo del puntaje. */
+$('#check2').addEventListener('click', () => {
+  const a = analizarEstacion2();
+
+  // Puntajes parciales
+  const pPara   = a.para.estado   === 'ok' ? 8  : 0;
+  const pCc     = a.cc.estado     === 'ok' ? 8  : 0;
+  const pCco    = a.cco.estado    === 'ok' ? 10 : 0;
+  const pAsunto = a.asunto.estado === 'ok' ? 6  : 0;
+  const pCuerpo = (a.cuerpo.haySaludo ? 3 : 0) + (a.cuerpo.hayDespedida ? 2 : 0) + (a.cuerpo.hayFirma ? 3 : 0);
+
+  const puntaje = pPara + pCc + pCco + pAsunto + pCuerpo;
+  state.e2.puntaje = puntaje;
+  state.e2.detalle = [
+    { campo:'Destinatario (Para)', pts:pPara,   max:8,  estado:a.para.estado,   msg:a.para.msg },
+    { campo:'Copia visible (CC)',  pts:pCc,     max:8,  estado:a.cc.estado,     msg:a.cc.msg },
+    { campo:'Copia oculta (CCO)',  pts:pCco,    max:10, estado:a.cco.estado,    msg:a.cco.msg },
+    { campo:'Asunto',              pts:pAsunto, max:6,  estado:a.asunto.estado, msg:a.asunto.msg },
+    { campo:'Cuerpo del mensaje',  pts:pCuerpo, max:8,  estado:a.cuerpo.estado, msg:a.cuerpo.msg }
+  ];
+
+  // Feedback final
+  let html = '';
+  html += puntaje >= 34
+    ? bloqueMsg('ok', `<strong>¡Excelente redacción!</strong> Obtuviste ${puntaje} de 40 puntos.`)
+    : puntaje >= 22
+      ? bloqueMsg('warn', `<strong>Buen trabajo, aunque hay detalles por ajustar.</strong> Obtuviste ${puntaje} de 40 puntos.`)
+      : bloqueMsg('err', `<strong>Revisá las cabeceras del mensaje.</strong> Obtuviste ${puntaje} de 40 puntos.`);
+
+  state.e2.detalle.forEach(d => {
+    const tipo = d.estado === 'ok' ? 'ok' : d.estado === 'warn' ? 'warn' : 'err';
+    html += bloqueMsg(tipo, `<strong>${d.campo}</strong> (${d.pts}/${d.max}): ${d.msg}`);
+  });
+  html += bloqueMsg('warn', '💡 Recordá: <strong>CC</strong> es visible para todos; <strong>CCO</strong> protege la privacidad de quien recibe la copia.');
+  $('#fb2').innerHTML = html;
+
+  // Bloquear la edición y mostrar el botón de continuar
+  e2Bloqueada = true;
+  ['f-para','f-cc','f-cco','f-asunto','f-cuerpo'].forEach(id => {
+    document.getElementById(id).disabled = true;
+  });
+  $('#check2').style.display = 'none';
+  $('#btnContinuar2').style.display = '';
+});
+
+/** Pasar a la Estación 3. */
+$('#btnContinuar2').addEventListener('click', () => {
+  state.e2.completada = true;
+  setProgreso(3);
+  iniciarEstacion3();
+  mostrarPantalla('screen-3');
+});
+
+/* ==========================================================================
+   5. ESTACIÓN 3 · AUDITORÍA DE BANDEJA Y CIBERSEGURIDAD
+   ========================================================================== */
+const CORREOS = [
+  {
+    id:'c1',
+    inicial:'P',
+    de:'Preceptoría 4° Año <preceptoria@escuela.edu.ar>',
+    asunto:'Cronograma de exámenes de diciembre',
+    cuerpo:'Hola a todos: adjunto el cronograma de mesas de examen de diciembre. Cualquier duda pueden acercarse a preceptoría en el horario habitual. Saludos cordiales.',
+    esSpam:false,
+    explicacion:'Remitente institucional conocido (@escuela.edu.ar), asunto coherente con la vida escolar y sin pedidos de datos ni enlaces sospechosos.'
+  },
+  {
+    id:'c2',
+    inicial:'S',
+    de:'Soporte de Cuenta <seguridad@escuela-verificacion-cuenta.net>',
+    asunto:'URGENTE: su cuenta será eliminada en 24 horas',
+    cuerpo:'Estimado usuario: detectamos un problema con su cuenta. Debe confirmar su USUARIO y CONTRASEÑA haciendo clic en el siguiente enlace para evitar la eliminación definitiva: http://bit.ly/verificar-cuenta-ya',
+    esSpam:true,
+    explicacion:'Dominio falso (no pertenece a @escuela.edu.ar), urgencia artificial, enlace acortado y solicitud de usuario y contraseña. Es un caso típico de phishing.'
+  },
+  {
+    id:'c3',
+    inicial:'G',
+    de:'Premios Internacionales <ganador@premios-mundial.biz>',
+    asunto:'¡¡FELICITACIONES!! Ganaste un celular de última generación',
+    cuerpo:'Usted ha sido seleccionado como ganador. Solo debe abonar el costo de envío con tarjeta de crédito y completar sus datos personales. ¡Oferta válida por 2 horas!',
+    esSpam:true,
+    explicacion:'Premio no solicitado, presión por tiempo limitado, pago adelantado y pedido de datos personales y bancarios. Es una estafa.'
+  },
+  {
+    id:'c4',
+    inicial:'D',
+    de:'Diego Rodríguez <diego.rodriguez@escuela.edu.ar>',
+    asunto:'Material N°16 y Actividad N°9 - Informática Aplicada',
+    cuerpo:'Estimados estudiantes: les comparto el Material N°16 "Dominando el Correo Electrónico". La Actividad N°9 se revisará en el próximo encuentro presencial. Descarguen el archivo adjunto y léanlo con atención. Saludos, Prof. Diego Rodríguez.',
+    esSpam:false,
+    explicacion:'Docente conocido, dominio institucional, tema esperado por el curso y archivo adjunto coherente con la clase.'
+  },
+  {
+    id:'c5',
+    inicial:'D',
+    de:'Dirección del Establecimiento <direccion@escuela.edu.ar.gestion-segura.info>',
+    asunto:'Actualización obligatoria de credenciales del alumno',
+    cuerpo:'Por una nueva normativa, todos los alumnos deben actualizar sus credenciales antes del viernes. Ingrese al formulario y cargue su usuario, contraseña y DNI: http://gestion-segura.info/login',
+    esSpam:true,
+    explicacion:'El dominio real es @escuela.edu.ar, pero se le agregó ".gestion-segura.info" al final: es un dominio suplantado. Además pide contraseña y DNI. Phishing.'
+  }
+];
+
+/** Inicializa la Estación 3. */
+function iniciarEstacion3(){
+  state.e3.respuestas = {};
+  state.e3.puntaje = 0;
+  state.e3.aciertos = 0;
+  state.e3.detalle = [];
+  $('#fb3').innerHTML = '';
+  $('#check3').disabled = true;
+  $('#check3').style.display = '';
+  $('#btnContinuar3').style.display = 'none';
+  renderEstacion3();
+}
+
+/** Dibuja las tarjetas de correo. */
+function renderEstacion3(){
+  const cont = $('#listaCorreos');
+  cont.innerHTML = '';
+
+  CORREOS.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'correo';
+    card.id = 'card-' + c.id;
+    card.innerHTML = `
+      <div class="correo-head">
+        <div class="avatar">${escaparHTML(c.inicial)}</div>
+        <div>
+          <div class="correo-de">${escaparHTML(c.de)}</div>
+          <div class="correo-asunto">${escaparHTML(c.asunto)}</div>
+        </div>
+      </div>
+      <p class="correo-cuerpo">${escaparHTML(c.cuerpo)}</p>
+      <div class="correo-opciones">
+        <button type="button" class="opcion" data-id="${c.id}" data-val="inbox">📥 Bandeja de entrada</button>
+        <button type="button" class="opcion" data-id="${c.id}" data-val="spam">🚫 Spam / Phishing</button>
+      </div>
+      <div class="correo-feedback"></div>
+    `;
+    cont.appendChild(card);
+  });
+
+  // Delegación de eventos para las opciones
+  cont.addEventListener('click', manejarClickOpcion);
+}
+
+/** Maneja la selección de clasificación de cada correo. */
+function manejarClickOpcion(ev){
+  const btn = ev.target.closest('.opcion');
+  if (!btn) return;
+  if (state.e3.detalle.length > 0) return;   // ya verificado
+
+  const id  = btn.dataset.id;
+  const val = btn.dataset.val;
+
+  state.e3.respuestas[id] = val;
+
+  // Refrescar estilos del grupo
+  const card = document.getElementById('card-' + id);
+  $$('.opcion', card).forEach(b => {
+    b.classList.remove('sel-inbox','sel-spam');
+    if (b.dataset.val === val){
+      b.classList.add(val === 'inbox' ? 'sel-inbox' : 'sel-spam');
+    }
+  });
+
+  $('#check3').disabled = Object.keys(state.e3.respuestas).length !== CORREOS.length;
+}
+
+/** Verifica la auditoría completa. */
+$('#check3').addEventListener('click', () => {
+  let aciertos = 0;
+  const detalle = [];
+
+  CORREOS.forEach(c => {
+    const resp = state.e3.respuestas[c.id];
+    const acierto = (resp === 'spam') === c.esSpam;
+    if (acierto) aciertos++;
+
+    const etiquetaResp = resp === 'spam' ? 'Spam / Phishing' : 'Bandeja de entrada';
+    const etiquetaOk   = c.esSpam ? 'Spam / Phishing' : 'Bandeja de entrada';
+
+    detalle.push({
+      asunto: c.asunto,
+      de: c.de,
+      respuesta: etiquetaResp,
+      correcta: etiquetaOk,
+      acierto,
+      explicacion: c.explicacion
+    });
+
+    // Feedback visual dentro de cada tarjeta
+    const card = document.getElementById('card-' + c.id);
+    card.classList.add('resuelto');
+    const fb = $('.correo-feedback', card);
+    fb.innerHTML = acierto
+      ? bloqueMsg('ok', `<strong>¡Correcto!</strong> ${escaparHTML(c.explicacion)}`)
+      : bloqueMsg('err', `<strong>Incorrecto.</strong> Este correo iba a <strong>${etiquetaOk}</strong>. ${escaparHTML(c.explicacion)}`);
+
+    // Bloquear los botones de esa tarjeta
+    $$('.opcion', card).forEach(b => { b.disabled = true; b.style.cursor = 'default'; });
+  });
+
+  const puntaje = aciertos * 8;   // 5 correos × 8 pts = 40 pts
+  state.e3.puntaje = puntaje;
+  state.e3.aciertos = aciertos;
+  state.e3.detalle = detalle;
+
+  let html = '';
+  html += aciertos === 5
+    ? bloqueMsg('ok', '<strong>¡Auditoría perfecta!</strong> Detectaste todos los correos maliciosos.')
+    : aciertos >= 3
+      ? bloqueMsg('warn', `<strong>Buen ojo.</strong> Acertaste ${aciertos} de 5 correos (${puntaje} puntos).`)
+      : bloqueMsg('err', `<strong>Necesitás reforzar la detección de phishing.</strong> Acertaste ${aciertos} de 5 (${puntaje} puntos).`);
+  html += bloqueMsg('warn', '💡 Señales de alerta: dominio distinto al institucional, urgencia extrema, premios no solicitados, enlaces acortados y pedidos de usuario/contraseña o datos bancarios.');
+  $('#fb3').innerHTML = html;
+
+  $('#check3').style.display = 'none';
+  $('#btnContinuar3').style.display = '';
+});
+
+/** Ver resultados finales. */
+$('#btnContinuar3').addEventListener('click', () => {
+  state.e3.completada = true;
+  state.fin = new Date();
+  setProgreso(4);
+  mostrarResultados();
+  mostrarPantalla('screen-results');
+});
+
+/* ==========================================================================
+   6. RESULTADOS FINALES
+   ========================================================================== */
+function mostrarResultados(){
+  const total = state.e1.best + state.e2.puntaje + state.e3.puntaje;
+
+  $('#resPuntaje').textContent = total;
+
+  // Badge de estado
+  const badge = $('#resBadge');
+  badge.classList.remove('aprobado','observado','refuerzo');
+  if (total >= 70){
+    badge.textContent = '✅ Completado satisfactoriamente';
+    badge.classList.add('aprobado');
+  } else if (total >= 50){
+    badge.textContent = '⚠️ Aprobado con observaciones';
+    badge.classList.add('observado');
+  } else {
+    badge.textContent = '🔁 Requiere refuerzo y relectura del material';
+    badge.classList.add('refuerzo');
+  }
+
+  $('#resTitulo').textContent = `¡Misión completada, ${state.alumno.nombre}!`;
+  $('#resSubtitulo').textContent =
+    `${state.alumno.apellido}, ${state.alumno.curso} · ${new Date().toLocaleDateString('es-AR')} a las ${new Date().toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})}`;
+
+  // Tabla
+  const tbody = $('#tablaResultados tbody');
+  tbody.innerHTML = `
+    <tr>
+      <td><strong>Estación 1</strong></td>
+      <td>Arquitectura y enrutamiento del e-mail</td>
+      <td class="num">${state.e1.best} / 20</td>
+    </tr>
+    <tr>
+      <td><strong>Estación 2</strong></td>
+      <td>Redacción estratégica y cabeceras (Para, CC, CCO, Asunto, Cuerpo)</td>
+      <td class="num">${state.e2.puntaje} / 40</td>
+    </tr>
+    <tr>
+      <td><strong>Estación 3</strong></td>
+      <td>Auditoría de bandeja y ciberseguridad (phishing / spam)</td>
+      <td class="num">${state.e3.puntaje} / 40</td>
+    </tr>
+    <tr style="background:#eff6ff">
+      <td colspan="2"><strong>TOTAL</strong></td>
+      <td class="num"><strong>${total} / 100</strong></td>
+    </tr>
+  `;
+
+  // Observaciones
+  let obs = '';
+  obs += total >= 70
+    ? bloqueMsg('ok', 'Demostraste un manejo correcto y seguro de las herramientas de correo electrónico.')
+    : total >= 50
+      ? bloqueMsg('warn', 'Alcanzaste los aprendizajes mínimos. Revisá los puntos señalados para consolidar el uso profesional del e-mail.')
+      : bloqueMsg('err', 'Te recomendamos releer el Material N°16 y repetir la actividad para afianzar los conceptos.');
+
+  if (state.e1.best < 20) obs += bloqueMsg('warn', '<strong>Estación 1:</strong> repasá el orden de las etapas del viaje de un correo electrónico (Emisión → Tránsito → Recepción → Descarga y respuesta).');
+  if (state.e2.puntaje < 40) obs += bloqueMsg('warn', '<strong>Estación 2:</strong> recordá que CC es una copia visible y CCO una copia oculta que protege la privacidad del destinatario.');
+  if (state.e3.puntaje < 40) obs += bloqueMsg('warn', '<strong>Estación 3:</strong> verificá siempre el dominio del remitente y desconfiá de la urgencia y de los pedidos de contraseñas.');
+
+  $('#observaciones').innerHTML = obs;
+}
+
+/* ==========================================================================
+   7. GENERACIÓN Y DESCARGA DEL INFORME .DOC
+   ========================================================================== */
+function limpiarNombreArchivo(txt){
+  return String(txt).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+/** Construye el HTML compatible con Microsoft Word / LibreOffice. */
+function construirInformeHTML(){
+  const total = state.e1.best + state.e2.puntaje + state.e3.puntaje;
+  const estado = total >= 70 ? 'Completado satisfactoriamente'
+               : total >= 50 ? 'Aprobado con observaciones'
+               : 'Requiere refuerzo';
+  const f = state.fin || new Date();
+  const fecha = f.toLocaleDateString('es-AR', { day:'2-digit', month:'long', year:'numeric' });
+  const hora  = f.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' });
+
+  // --- Filas de la Estación 1 ---
+  const filasE1 = state.e1.detalle.map(d =>
+    `<tr><td>${d.pos}</td><td>${escaparHTML(d.dado)}</td><td>${escaparHTML(d.correcto)}</td>
+     <td class="${d.ok ? 'ok' : 'no'}">${d.ok ? 'CORRECTO' : 'INCORRECTO'}</td></tr>`
+  ).join('') || '<tr><td colspan="4">Sin datos.</td></tr>';
+
+  // --- Filas de la Estación 2 ---
+  const filasE2 = state.e2.detalle.map(d =>
+    `<tr><td>${escaparHTML(d.campo)}</td><td>${d.pts} / ${d.max}</td>
+     <td>${d.estado === 'ok' ? 'Correcto' : d.estado === 'warn' ? 'A revisar' : 'Incorrecto'}</td></tr>`
+  ).join('') || '<tr><td colspan="3">Sin datos.</td></tr>';
+
+  // --- Filas de la Estación 3 ---
+  const filasE3 = state.e3.detalle.map(d =>
+    `<tr><td>${escaparHTML(d.asunto)}</td><td>${escaparHTML(d.de)}</td>
+     <td>${escaparHTML(d.respuesta)}</td><td>${escaparHTML(d.correcta)}</td>
+     <td class="${d.acierto ? 'ok' : 'no'}">${d.acierto ? 'ACIERTO' : 'ERROR'}</td></tr>`
+  ).join('') || '<tr><td colspan="5">Sin datos.</td></tr>';
+
+  return `
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>Informe Misión Correo Seguro</title>
+<!--[if gte mso 9]>
+<xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml>
+<![endif]-->
+<style>
+  @page { size: A4; margin: 2cm; }
+  body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #0f172a; }
+  h1 { color: #1a4fa0; font-size: 18pt; margin: 0 0 4px; }
+  h2 { color: #1a4fa0; font-size: 13pt; margin: 18px 0 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; }
+  h3 { color: #123a6b; font-size: 11.5pt; margin: 12px 0 4px; }
+  p  { margin: 4px 0; }
+  .sub { color: #64748b; font-size: 10pt; }
+  .box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 12px; margin: 10px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 14px; }
+  th, td { border: 1px solid #94a3b8; padding: 6px 8px; font-size: 10pt; text-align: left; vertical-align: top; }
+  th { background: #dbeafe; color: #0b2545; }
+  .ok { color: #15803d; font-weight: bold; }
+  .no { color: #b91c1c; font-weight: bold; }
+  .total { background: #eff6ff; font-weight: bold; }
+  .firma { margin-top: 26px; font-size: 10pt; color: #475569; }
+</style>
+</head>
+<body>
+
+  <h1>Informe de Actividad - Misión Correo Seguro</h1>
+  <p class="sub">Informática Aplicada · 4° Año · Material N°16: Dominando el Correo Electrónico</p>
+
+  <div class="box">
+    <p><strong>Alumno/a:</strong> ${escaparHTML(state.alumno.apellido)}, ${escaparHTML(state.alumno.nombre)}</p>
+    <p><strong>Curso / División:</strong> ${escaparHTML(state.alumno.curso)}</p>
+    <p><strong>Fecha y hora de realización:</strong> ${escaparHTML(fecha)} — ${escaparHTML(hora)} hs</p>
+    <p><strong>Puntaje total obtenido:</strong> ${total} / 100 puntos</p>
+    <p><strong>Estado:</strong> <span class="${total >= 50 ? 'ok' : 'no'}">${estado}</span></p>
+  </div>
+
+  <h2>1. Resultados por estación</h2>
+  <table>
+    <tr>
+      <th>Estación</th><th>Contenido evaluado</th><th>Puntaje</th>
+    </tr>
+    <tr>
+      <td>Estación 1</td>
+      <td>Arquitectura y enrutamiento del correo electrónico</td>
+      <td>${state.e1.best} / 20</td>
+    </tr>
+    <tr>
+      <td>Estación 2</td>
+      <td>Redacción estratégica y cabeceras (Para, CC, CCO, Asunto, Cuerpo)</td>
+      <td>${state.e2.puntaje} / 40</td>
+    </tr>
+    <tr>
+      <td>Estación 3</td>
+      <td>Auditoría de bandeja y ciberseguridad (phishing / spam)</td>
+      <td>${state.e3.puntaje} / 40</td>
+    </tr>
+    <tr class="total">
+      <td colspan="2">TOTAL</td>
+      <td>${total} / 100</td>
+    </tr>
+  </table>
+
+  <h2>2. Detalle de la Estación 1 - Orden de los pasos</h2>
+  <table>
+    <tr><th>Posición</th><th>Respuesta del alumno</th><th>Respuesta correcta</th><th>Resultado</th></tr>
+    ${filasE1}
+  </table>
+
+  <h2>3. Detalle de la Estación 2 - Cabeceras y cuerpo del mensaje</h2>
+  <table>
+    <tr><th>Campo evaluado</th><th>Puntaje</th><th>Estado</th></tr>
+    ${filasE2}
+  </table>
+
+  <h2>4. Detalle de la Estación 3 - Auditoría de bandeja</h2>
+  <table>
+    <tr><th>Asunto</th><th>Remitente</th><th>Clasificación del alumno</th><th>Clasificación correcta</th><th>Resultado</th></tr>
+    ${filasE3}
+  </table>
+
+  <h2>5. Observaciones y estado de aprobación</h2>
+  <p>${estado}. ${total >= 70
+      ? 'El alumno demuestra un manejo correcto y seguro de las herramientas de correo electrónico, distinguiendo el uso de Para, CC y CCO, y detectando intentos de phishing.'
+      : total >= 50
+        ? 'El alumno alcanza los aprendizajes mínimos, aunque se recomienda revisar los puntos señalados para consolidar el uso profesional y seguro del correo electrónico.'
+        : 'Se recomienda la relectura del Material N°16 y la repetición de la actividad para afianzar los conceptos de arquitectura, cabeceras y ciberseguridad del correo electrónico.'}</p>
+
+  <div class="firma">
+    <p>_______________________________________</p>
+    <p>Informe generado automáticamente por la aplicación educativa <strong>"Misión Correo Seguro"</strong>.</p>
+    <p>Actividad N°9 · Prof. Diego Rodríguez · Informática Aplicada 4° Año</p>
+  </div>
+
+</body>
+</html>`;
+}
+
+/** Genera y descarga el archivo .doc */
+$('#btnDescargar').addEventListener('click', () => {
+  const html = construirInformeHTML();
+
+  // El BOM (\ufeff) ayuda a Word a interpretar correctamente los acentos.
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword;charset=utf-8' });
+
+  const apellido = limpiarNombreArchivo(state.alumno.apellido) || 'Alumno';
+  const nombre   = limpiarNombreArchivo(state.alumno.nombre)   || 'Anonimo';
+  const archivo  = `Informe_MisionCorreoSeguro_${apellido}_${nombre}.doc`;
+
+  // Descarga mediante enlace temporal
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = archivo;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  // Liberar memoria
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+  // Confirmación visual
+  const btn = $('#btnDescargar');
+  const textoOriginal = btn.textContent;
+  btn.textContent = '✅ ¡Comprobante descargado! Ya podés subirlo a Classroom.';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = textoOriginal;
+    btn.disabled = false;
+  }, 3500);
+});
+
+/* ==========================================================================
+   8. REINICIAR TODA LA ACTIVIDAD
+   ========================================================================== */
+$('#btnReiniciar').addEventListener('click', () => {
+  if (confirm('¿Querés volver a realizar la actividad desde el comienzo? Se borrarán los resultados actuales.')){
+    location.reload();
+  }
+});
+</script>
+</body>
+</html>
